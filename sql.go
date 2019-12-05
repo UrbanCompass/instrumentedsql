@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/kr/pretty"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/pkg/errors"
 )
 
@@ -166,14 +166,15 @@ func (c wrappedConn) Exec(query string, args []driver.Value) (driver.Result, err
 }
 
 func (c wrappedConn) ExecContext(ctx context.Context, query string, args []driver.NamedValue) (r driver.Result, err error) {
+	formattedArgs := spew.Sdump(args)
 	span := c.GetSpan(ctx).NewChild("sql-conn-exec")
 	span.SetLabel("component", "database/sql")
 	span.SetLabel("query", query)
-	span.SetLabel("args", pretty.Sprint(args))
+	span.SetLabel("args", formattedArgs)
 	defer func() {
 		span.SetLabel("err", fmt.Sprint(err))
 		span.Finish()
-		c.Log(ctx, "sql-conn-exec", "query", query, "args", pretty.Sprint(args), "err", err)
+		c.Log(ctx, "sql-conn-exec", "query", query, "args", formattedArgs, "err", err)
 	}()
 
 	if execContext, ok := c.parent.(driver.ExecerContext); ok {
@@ -232,14 +233,15 @@ func (c wrappedConn) Query(query string, args []driver.Value) (driver.Rows, erro
 }
 
 func (c wrappedConn) QueryContext(ctx context.Context, query string, args []driver.NamedValue) (rows driver.Rows, err error) {
+	formattedArgs := spew.Sdump(args)
 	span := c.GetSpan(ctx).NewChild("sql-conn-query")
 	span.SetLabel("component", "database/sql")
 	span.SetLabel("query", query)
-	span.SetLabel("args", pretty.Sprint(args))
+	span.SetLabel("args", formattedArgs)
 	defer func() {
 		span.SetLabel("err", fmt.Sprint(err))
 		span.Finish()
-		c.Log(ctx, "sql-conn-query", "query", query, "args", pretty.Sprint(args), "err", err)
+		c.Log(ctx, "sql-conn-query", "query", query, "args", formattedArgs, "err", err)
 	}()
 
 	if queryerContext, ok := c.parent.(driver.QueryerContext); ok {
@@ -306,14 +308,15 @@ func (s wrappedStmt) NumInput() int {
 }
 
 func (s wrappedStmt) Exec(args []driver.Value) (res driver.Result, err error) {
+	formattedArgs := spew.Sdump(args)
 	span := s.GetSpan(s.ctx).NewChild("sql-stmt-exec")
 	span.SetLabel("component", "database/sql")
 	span.SetLabel("query", s.query)
-	span.SetLabel("args", pretty.Sprint(args))
+	span.SetLabel("args", formattedArgs)
 	defer func() {
 		span.SetLabel("err", fmt.Sprint(err))
 		span.Finish()
-		s.Log(s.ctx, "sql-stmt-exec", "query", s.query, "args", pretty.Sprint(args), "err", err)
+		s.Log(s.ctx, "sql-stmt-exec", "query", s.query, "args", formattedArgs, "err", err)
 	}()
 
 	res, err = s.parent.Exec(args)
@@ -325,14 +328,15 @@ func (s wrappedStmt) Exec(args []driver.Value) (res driver.Result, err error) {
 }
 
 func (s wrappedStmt) Query(args []driver.Value) (rows driver.Rows, err error) {
+	formattedArgs := spew.Sdump(args)
 	span := s.GetSpan(s.ctx).NewChild("sql-stmt-query")
 	span.SetLabel("component", "database/sql")
 	span.SetLabel("query", s.query)
-	span.SetLabel("args", pretty.Sprint(args))
+	span.SetLabel("args", formattedArgs)
 	defer func() {
 		span.SetLabel("err", fmt.Sprint(err))
 		span.Finish()
-		s.Log(s.ctx, "sql-stmt-query", "query", s.query, "args", pretty.Sprint(args), "err", err)
+		s.Log(s.ctx, "sql-stmt-query", "query", s.query, "args", formattedArgs, "err", err)
 	}()
 
 	rows, err = s.parent.Query(args)
@@ -344,14 +348,15 @@ func (s wrappedStmt) Query(args []driver.Value) (rows driver.Rows, err error) {
 }
 
 func (s wrappedStmt) ExecContext(ctx context.Context, args []driver.NamedValue) (res driver.Result, err error) {
+	formattedArgs := spew.Sdump(args)
 	span := s.GetSpan(ctx).NewChild("sql-stmt-exec")
 	span.SetLabel("component", "database/sql")
 	span.SetLabel("query", s.query)
-	span.SetLabel("args", pretty.Sprint(args))
+	span.SetLabel("args", formattedArgs)
 	defer func() {
 		span.SetLabel("err", fmt.Sprint(err))
 		span.Finish()
-		s.Log(ctx, "sql-stmt-exec", "query", s.query, "args", pretty.Sprint(args), "err", err)
+		s.Log(ctx, "sql-stmt-exec", "query", s.query, "args", formattedArgs, "err", err)
 	}()
 
 	if stmtExecContext, ok := s.parent.(driver.StmtExecContext); ok {
@@ -379,14 +384,15 @@ func (s wrappedStmt) ExecContext(ctx context.Context, args []driver.NamedValue) 
 }
 
 func (s wrappedStmt) QueryContext(ctx context.Context, args []driver.NamedValue) (rows driver.Rows, err error) {
+	formattedArgs := spew.Sdump(args)
 	span := s.GetSpan(ctx).NewChild("sql-stmt-query")
 	span.SetLabel("component", "database/sql")
 	span.SetLabel("query", s.query)
-	span.SetLabel("args", pretty.Sprint(args))
+	span.SetLabel("args", formattedArgs)
 	defer func() {
 		span.SetLabel("err", fmt.Sprint(err))
 		span.Finish()
-		s.Log(ctx, "sql-stmt-query", "query", s.query, "args", pretty.Sprint(args), "err", err)
+		s.Log(ctx, "sql-stmt-query", "query", s.query, "args", formattedArgs, "err", err)
 	}()
 
 	if stmtQueryContext, ok := s.parent.(driver.StmtQueryContext); ok {
