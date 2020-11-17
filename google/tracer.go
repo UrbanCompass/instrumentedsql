@@ -3,7 +3,7 @@ package google
 import (
 	"context"
 
-	"cloud.google.com/go/trace"
+	"cloud.google.com/go/trace/apiv2"
 
 	"github.com/lebiathan/instrumentedsql"
 )
