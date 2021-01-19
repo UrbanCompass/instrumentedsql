@@ -8,9 +8,9 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"github.com/mattn/go-sqlite3"
 
-	"github.com/lebiathan/instrumentedsql"
-	"github.com/lebiathan/instrumentedsql/google"
-	"github.com/lebiathan/instrumentedsql/opentracing"
+	"github.com/UrbanCompass/instrumentedsql"
+	"github.com/UrbanCompass/instrumentedsql/google"
+	"github.com/UrbanCompass/instrumentedsql/opentracing"
 )
 
 // WrapDriverGoogle demonstrates how to call wrapDriver and register a new driver.

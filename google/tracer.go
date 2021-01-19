@@ -5,7 +5,7 @@ import (
 
 	"cloud.google.com/go/trace/apiv2"
 
-	"github.com/lebiathan/instrumentedsql"
+	"github.com/UrbanCompass/instrumentedsql"
 )
 
 type tracer struct{}
